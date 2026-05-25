@@ -1,0 +1,25 @@
+# Normalisation : tout le texte en LF + UTF-8 (cf. codexia-doc guides/git-conventions.md §2).
+* text=auto eol=lf
+
+# Types texte explicites (évite toute ambiguïté de détection)
+*.py    text eol=lf
+*.txt   text eol=lf
+*.md    text eol=lf
+*.ini   text eol=lf
+*.cfg   text eol=lf
+*.toml  text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.json  text eol=lf
+*.sh    text eol=lf
+
+# Hooks Git (sans extension) — forcer LF pour rester exécutables sous Linux
+scripts/hooks/* text eol=lf
+
+# Binaires (jamais de conversion EOL)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.zip   binary
+*.bin   binary

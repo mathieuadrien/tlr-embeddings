@@ -94,6 +94,22 @@ sudo systemctl enable --now telaria-embeddings
 Surveiller la **mémoire** (un seul modèle chargé). `/health` sert à la supervision
 (interrogé par la commande `app:rag:stats` côté Symfony).
 
+## Conventions Git
+
+Conventions canon : `codexia-doc/guides/git-conventions.md` (s'applique aux 3 dépôts).
+
+- **Branches (GitFlow solo + IA)** : on travaille sur `develop` ; `master` reçoit les
+  releases via **merge direct `--ff-only`, sans PR**. `master` n'est **pas** protégée
+  (choix assumé ; à activer si une équipe ou une CI rejoint).
+- **Messages** : Conventional Commits (`type(scope): sujet`), trailer `Co-Authored-By`
+  pour les commits assistés par IA.
+- **Normalisation** : LF + UTF-8 imposés par `.gitattributes`.
+- **Hook `pre-push`** : rejoue `pytest` (tests rapides) avant chaque push. Activation
+  **une fois** par clone :
+  ```bash
+  git config core.hooksPath scripts/hooks
+  ```
+
 ## Périmètre
 
 V1 = ce microservice (`/health`, `/embed`) + tests + `requirements.txt` + README.

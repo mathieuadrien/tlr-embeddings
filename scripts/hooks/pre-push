@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Vérifs locales avant push : rejoue les tests rapides (échec = push BLOQUÉ).
+# Équivalent Python du scripts/hooks/pre-push de codexia-doc (qui vérifie les liens).
+# Activation (une fois) : git config core.hooksPath scripts/hooks
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+# Utilise le venv s'il existe (Windows ou Linux), sinon le python du PATH.
+if [ -x ".venv/Scripts/python.exe" ]; then
+  PY=".venv/Scripts/python.exe"
+elif [ -x ".venv/bin/python" ]; then
+  PY=".venv/bin/python"
+else
+  PY="python"
+fi
+
+echo "pre-push : pytest (tests rapides, modèle mocké)…"
+exec "$PY" -m pytest -q
