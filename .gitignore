@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Cache des modèles Hugging Face (téléchargés au 1er lancement)
+.cache/
+hf_cache/
+
+# IDE
+.idea/
+.vscode/
+
+# Lock généré en déploiement
+requirements.lock

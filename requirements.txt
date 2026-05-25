@@ -1,0 +1,6 @@
+# telaria-embeddings — dépendances de RUNTIME (versions figées).
+# Reproductibilité : après `pip install -r requirements.txt` dans le venv de
+# déploiement, regénérer un lock complet avec `pip freeze > requirements.lock`.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+sentence-transformers==3.3.1

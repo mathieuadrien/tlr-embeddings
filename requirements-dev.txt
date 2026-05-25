@@ -1,0 +1,5 @@
+# Dépendances de DEV/TEST (non déployées). Installer en plus du runtime :
+#   pip install -r requirements.txt -r requirements-dev.txt
+pytest==8.3.4
+httpx==0.28.1          # requis par fastapi.testclient.TestClient
+numpy==2.2.1           # faux encodeur des tests (tests/fakes.py)
