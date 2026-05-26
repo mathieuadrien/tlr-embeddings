@@ -1,0 +1,42 @@
+# Unité systemd — telaria-embeddings (microservice d'embeddings, socle IA Codexia).
+# Installation : voir README §Déploiement. Copier vers
+#   /etc/systemd/system/telaria-embeddings.service
+# puis : sudo systemctl daemon-reload && sudo systemctl enable --now telaria-embeddings
+#
+# Hypothèses (alignées sur l'infra VPS confirmée le 2026-05-26) :
+#   - code déployé dans /opt/telaria-embeddings, venv dans .venv
+#   - utilisateur/groupe dédié `telaria`
+#   - cache du modèle Hugging Face SUR DISQUE (pas /tmp = tmpfs/RAM)
+[Unit]
+Description=telaria-embeddings — microservice d'embeddings (socle IA Codexia)
+Documentation=https://github.com/mathieuadrien/telaria-embeddings
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=telaria
+Group=telaria
+WorkingDirectory=/opt/telaria-embeddings
+
+# Modèle HF mis en cache sur disque (jamais /tmp). Réseau OK au 1er boot.
+Environment=HF_HOME=/var/lib/telaria-embeddings/hf
+Environment=HF_HUB_DISABLE_SYMLINKS_WARNING=1
+
+# Bind sur la boucle locale uniquement (jamais d'exposition publique).
+ExecStart=/opt/telaria-embeddings/.venv/bin/uvicorn app:app --host 127.0.0.1 --port 8001
+
+Restart=on-failure
+RestartSec=5
+# 1er démarrage : téléchargement du modèle (~1,1 Go) au préchargement (lifespan).
+TimeoutStartSec=600
+
+# Durcissement (le service est stateless ; seul HF_HOME a besoin d'écriture).
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/telaria-embeddings
+
+[Install]
+WantedBy=multi-user.target
