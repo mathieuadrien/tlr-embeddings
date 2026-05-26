@@ -1,0 +1,24 @@
+# Compose autonome pour lancer le microservice seul (parité avec le compose de
+# dev de codexia, cf. codexia-doc/guides/install-locale.md §5).
+#   docker compose up -d
+#   curl http://127.0.0.1:8001/health
+services:
+  embeddings:
+    build: .
+    image: ghcr.io/<owner>/telaria-embeddings:latest
+    ports:
+      # Publié uniquement sur la boucle locale de l'hôte (pas d'exposition publique).
+      - "127.0.0.1:8001:8001"
+    volumes:
+      # Persiste le modèle (~1,1 Go) entre deux `up` — équivalent local du HF_HOME VPS.
+      - hf-cache:/home/app/.cache/huggingface
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8001/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 300s
+    restart: unless-stopped
+
+volumes:
+  hf-cache:

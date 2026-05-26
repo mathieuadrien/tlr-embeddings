@@ -119,6 +119,29 @@ Surveiller la **mémoire** (un seul modèle chargé). `/health` sert à la super
 (interrogé par la commande `app:rag:stats` côté Symfony) ; au 1er boot sans pré-cache,
 `/health` n'est prêt qu'après le téléchargement du modèle.
 
+## Lancer via Docker (dev local, parité WSL2)
+
+Le dépôt fournit son image (`Dockerfile` + `compose.yaml`). Le conteneur écoute
+`0.0.0.0:8001` **en interne** ; le port n'est publié que sur `127.0.0.1:8001` de
+l'hôte (pas d'exposition publique). Le healthcheck interroge `/health` via `curl`.
+
+```bash
+docker compose up -d
+curl http://127.0.0.1:8001/health     # {"status":"ok","model":"...","dim":768}
+```
+
+Le volume `hf-cache` (monté sur `/home/app/.cache/huggingface`) persiste le modèle
+(~1,1 Go) entre deux `up`. Côté `codexia`, le `compose.yaml` de dev référence
+`ghcr.io/<owner>/telaria-embeddings:latest` (ou `build: ../telaria-embeddings`).
+
+**Publier l'image sur GHCR** (action manuelle ou CI ; nécessite Docker + login) :
+
+```bash
+docker build -t ghcr.io/<owner>/telaria-embeddings:0.1.x .
+echo "$GHCR_TOKEN" | docker login ghcr.io -u mathieuadrien --password-stdin
+docker push ghcr.io/<owner>/telaria-embeddings:0.1.x
+```
+
 ## Conventions Git
 
 Conventions canon : `codexia-doc/guides/git-conventions.md` (s'applique aux 3 dépôts).
