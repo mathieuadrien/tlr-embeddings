@@ -9,9 +9,6 @@ versionnage [SemVer](https://semver.org/lang/fr/). Branches : GitFlow solo
 ## [Unreleased]
 
 ### Ajouté
-- `deploy/telaria-embeddings.service` : unité systemd versionnée (bind `127.0.0.1:8001`,
-  `HF_HOME` sur disque, durcissement, `TimeoutStartSec` pour le 1er téléchargement).
-- `.python-version` : `3.13.2` (version cible confirmée du VPS).
 - Image Docker (`Dockerfile`, `.dockerignore`, `compose.yaml`) pour le dev local
   WSL2 (parité VPS) : `python:3.13-slim`, user non-root `app`, bind `0.0.0.0:8001`
   publié sur `127.0.0.1:8001`, healthcheck `/health`, volume de cache HF.
@@ -19,8 +16,18 @@ versionnage [SemVer](https://semver.org/lang/fr/). Branches : GitFlow solo
   à valider en WSL2 avant publication GHCR.
 
 ### Modifié
+- README : section Docker (lancement `compose`, publication GHCR).
+
+## [0.1.1] - 2026-05-26
+
+### Ajouté
+- `deploy/telaria-embeddings.service` : unité systemd versionnée (bind `127.0.0.1:8001`,
+  `HF_HOME` sur disque, durcissement, `TimeoutStartSec` pour le 1er téléchargement).
+- `.python-version` : `3.13.2` (version cible confirmée du VPS).
+
+### Modifié
 - README : procédure de déploiement détaillée (prérequis `apt`, venv, pré-cache du
-  modèle, `requirements.lock` généré sur la cible, installation systemd) + section Docker.
+  modèle, `requirements.lock` généré sur la cible, installation systemd).
 
 ## [0.1.0] - 2026-05-26
 
