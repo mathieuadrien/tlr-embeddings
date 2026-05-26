@@ -8,6 +8,15 @@ versionnage [SemVer](https://semver.org/lang/fr/). Branches : GitFlow solo
 
 ## [Unreleased]
 
+### Ajouté
+- `deploy/telaria-embeddings.service` : unité systemd versionnée (bind `127.0.0.1:8001`,
+  `HF_HOME` sur disque, durcissement, `TimeoutStartSec` pour le 1er téléchargement).
+- `.python-version` : `3.13.2` (version cible confirmée du VPS).
+
+### Modifié
+- README : procédure de déploiement détaillée (prérequis `apt`, venv, pré-cache du
+  modèle, `requirements.lock` généré sur la cible, installation du service systemd).
+
 ## [0.1.0] - 2026-05-26
 
 Première version du microservice Python d'embeddings (Lot 0 — cœur RAG).

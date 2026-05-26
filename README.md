@@ -69,30 +69,55 @@ contrat, l'application des préfixes e5 et la validation des entrées.
 
 ## Déploiement (VPS CPU-only, systemd)
 
-Le service tourne en tâche de fond dans son venv. Exemple d'unité
-`/etc/systemd/system/telaria-embeddings.service` :
+Cible confirmée : VPS Linux, **Python 3.13.2** (cf. `.python-version`), 12 Go RAM,
+disque suffisant (le modèle pèse ~1,1 Go). Procédure générale ci-dessous ;
+`codexia-doc/guides/deployment.md` fait foi côté infra.
 
-```ini
-[Unit]
-Description=telaria-embeddings (microservice d'embeddings)
-After=network.target
-
-[Service]
-User=telaria
-WorkingDirectory=/opt/telaria-embeddings
-ExecStart=/opt/telaria-embeddings/.venv/bin/uvicorn app:app --host 127.0.0.1 --port 8001
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-```
+**1. Prérequis système** (python3 n'est pas préinstallé sur le VPS) :
 
 ```bash
+sudo apt update && sudo apt install -y python3 python3-venv python3-pip
+```
+
+**2. Code + venv** (déployé dans `/opt/telaria-embeddings`) :
+
+```bash
+sudo install -d -o telaria -g telaria /opt/telaria-embeddings
+# (déployer le contenu du dépôt dans /opt/telaria-embeddings, puis :)
+cd /opt/telaria-embeddings
+python3 -m venv .venv
+.venv/bin/pip install --upgrade pip
+.venv/bin/pip install -r requirements.txt
+# Lock reproductible, généré SUR LA CIBLE (Linux/3.13) puis commité dans le dépôt :
+.venv/bin/pip freeze > requirements.lock
+```
+
+> **`requirements.lock`** : non versionné depuis un poste Windows (les wheels, ex. `torch`,
+> sont spécifiques à la plateforme/version). Il se génère sur le VPS (Linux/3.13.2) et se
+> commite ensuite, pour des installations ultérieures via `pip install -r requirements.lock`.
+
+**3. Cache du modèle sur disque** (jamais `/tmp` = tmpfs/RAM). Pré-cache **optionnel**
+mais recommandé (évite ~1,1 Go au 1er boot) :
+
+```bash
+sudo install -d -o telaria -g telaria /var/lib/telaria-embeddings/hf
+sudo -u telaria HF_HOME=/var/lib/telaria-embeddings/hf \
+  /opt/telaria-embeddings/.venv/bin/python -c \
+  "from sentence_transformers import SentenceTransformer; SentenceTransformer('intfloat/multilingual-e5-base')"
+```
+
+**4. Service systemd** — l'unité est versionnée dans `deploy/telaria-embeddings.service`
+(bind `127.0.0.1:8001`, `HF_HOME` sur disque, durcissement) :
+
+```bash
+sudo cp deploy/telaria-embeddings.service /etc/systemd/system/
+sudo systemctl daemon-reload
 sudo systemctl enable --now telaria-embeddings
 ```
 
 Surveiller la **mémoire** (un seul modèle chargé). `/health` sert à la supervision
-(interrogé par la commande `app:rag:stats` côté Symfony).
+(interrogé par la commande `app:rag:stats` côté Symfony) ; au 1er boot sans pré-cache,
+`/health` n'est prêt qu'après le téléchargement du modèle.
 
 ## Conventions Git
 
