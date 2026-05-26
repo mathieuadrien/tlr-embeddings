@@ -1,0 +1,26 @@
+# Contexte de build minimal : seuls app.py + requirements.txt sont nécessaires.
+.git/
+.gitignore
+.gitattributes
+.idea/
+.vscode/
+
+# Environnements virtuels (jamais dans l'image)
+.venv/
+.venv-deploy/
+venv/
+
+# Caches Python / tests (non requis au runtime)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+tests/
+pytest.ini
+requirements-dev.txt
+
+# Artefacts de déploiement hôte / docs (hors image)
+deploy/
+scripts/
+.github/
+*.md
+.python-version
