@@ -10,9 +10,7 @@ venv/
 .cache/
 hf_cache/
 
-# IDE
+# IDE / outils locaux
 .idea/
 .vscode/
-
-# Lock généré en déploiement
-requirements.lock
+.claude/
