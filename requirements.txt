@@ -1,6 +1,13 @@
 # telaria-embeddings — dépendances de RUNTIME (versions figées).
 # Reproductibilité : après `pip install -r requirements.txt` dans le venv de
 # déploiement, regénérer un lock complet avec `pip freeze > requirements.lock`.
+#
+# Wheel CPU-only de torch : la cible (VPS Linux) est CPU-only. Sans ce pin,
+# `pip` tire la pile NVIDIA/CUDA (~plusieurs Go inutiles) — cf. retour codexia
+# 2026-05-26 après le 1er déploiement VPS.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 sentence-transformers==3.3.1
+torch==2.12.0+cpu
