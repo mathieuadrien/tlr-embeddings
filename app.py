@@ -8,10 +8,10 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from functools import lru_cache
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from fastapi import Depends, FastAPI
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, StringConstraints
 
 MODEL_NAME = "intfloat/multilingual-e5-base"
 
@@ -43,9 +43,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="telaria-embeddings", lifespan=lifespan)
 
 
+NonEmptyStr = Annotated[str, StringConstraints(min_length=1)]
+
+
 class EmbedRequest(BaseModel):
     type: Literal["query", "passage"]
-    texts: list[str] = Field(..., min_length=1)
+    texts: list[NonEmptyStr] = Field(..., min_length=1)
 
 
 class EmbedResponse(BaseModel):

@@ -8,6 +8,19 @@ versionnage [SemVer](https://semver.org/lang/fr/). Branches : GitFlow solo
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-05-29
+
+### Modifié
+- `app.py` : validation stricte des items de `texts` — chaque chaîne doit être
+  non vide (`StringConstraints(min_length=1)`) ; un item `""` retourne désormais
+  `422` (ex. `texts: ["", "abc"]` rejeté). Aligné sur le principe « validation
+  au plus tôt » acté avec codexia.
+- Workflow CI `docker-publish` : tag `latest` piloté par `flavor: latest=auto`
+  (supprime la ligne `type=raw,value=latest` redondante).
+
+### Tests
+- `test_embed_rejects_empty_string_item` : vérifie le rejet `422` sur item vide.
+
 ## [0.1.2] - 2026-05-28
 
 ### Ajouté
@@ -57,7 +70,8 @@ Première version du microservice Python d'embeddings (Lot 0 — cœur RAG).
 - README (installation, lancement `127.0.0.1:8001`, contrat, tests, unité systemd).
 - Conventions Git : `.gitattributes` (LF/UTF-8) et hook `pre-push` (pytest).
 
-[Unreleased]: https://github.com/<owner>/telaria-embeddings/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/<owner>/telaria-embeddings/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/<owner>/telaria-embeddings/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/<owner>/telaria-embeddings/releases/tag/v0.1.2
 [0.1.1]: https://github.com/<owner>/telaria-embeddings/releases/tag/v0.1.1
 [0.1.0]: https://github.com/<owner>/telaria-embeddings/releases/tag/v0.1.0
