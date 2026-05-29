@@ -48,12 +48,13 @@ jobs:
           # Stratégie de tags :
           #  - tag git `v1.2.3` → `v1.2.3`, `1.2.3`, `1.2`, `1`, `latest`
           #  - branche `develop` → `develop`
+          flavor: |
+            latest=auto
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: Build and push
         uses: docker/build-push-action@v6

@@ -37,3 +37,8 @@ def test_embed_rejects_invalid_type(client):
 def test_embed_rejects_empty_texts(client):
     res = client.post("/embed", json={"type": "query", "texts": []})
     assert res.status_code == 422
+
+
+def test_embed_rejects_empty_string_item(client):
+    res = client.post("/embed", json={"type": "query", "texts": ["", "abc"]})
+    assert res.status_code == 422
