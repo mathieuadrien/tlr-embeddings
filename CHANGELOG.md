@@ -8,6 +8,11 @@ versionnage [SemVer](https://semver.org/lang/fr/). Branches : GitFlow solo
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-06-14
+
+### Added
+- Tag d'alignement écosystème — validation convention \X.Y.Z\ sans préfixe \\.
+
 ## [0.1.3] - 2026-05-29
 
 ### Modifié
