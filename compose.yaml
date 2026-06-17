@@ -5,7 +5,7 @@
 services:
   embeddings:
     build: .
-    image: ghcr.io/<owner>/telaria-embeddings:latest
+    image: ghcr.io/mathieuadrien/telaria-embeddings:latest
     ports:
       # Publié uniquement sur la boucle locale de l'hôte (pas d'exposition publique).
       - "127.0.0.1:8001:8001"
